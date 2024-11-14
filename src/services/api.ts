@@ -1,7 +1,7 @@
 import axios from 'axios';
-import type { Product, CreateProductInput, UpdateProductInput } from '../types/products';
+import type { Product, CreateProductInput, UpdateProductInput } from '@/types/products';
 
-const API_URL = 'http://localhost:3316';
+const API_URL = 'http://localhost:3316'; // Asegúrate de que este puerto coincida con tu backend
 
 export const api = axios.create({
     baseURL: API_URL,
@@ -17,13 +17,43 @@ export const getProduct = async (id: number): Promise<Product> => {
     return response.data;
 };
 
-export const createProduct = async (product: CreateProductInput): Promise<Product> => {
-    const response = await api.post<Product>('/products', product);
+export const createProduct = async (productData: CreateProductInput): Promise<Product> => {
+    const formData = new FormData();
+    Object.entries(productData).forEach(([key, value]) => {
+    if (Array.isArray(value)) {
+        formData.append(key, JSON.stringify(value));
+    } else if (value instanceof File) {
+        formData.append(key, value);
+    } else {
+        formData.append(key, String(value));
+    }
+    });
+
+    const response = await api.post<Product>('/products', formData, {
+    headers: {
+        'Content-Type': 'multipart/form-data',
+    },
+    });
     return response.data;
 };
 
-export const updateProduct = async (id: number, product: UpdateProductInput): Promise<Product> => {
-    const response = await api.put<Product>(`/products/${id}`, product);
+export const updateProduct = async (id: number, productData: UpdateProductInput): Promise<Product> => {
+    const formData = new FormData();
+    Object.entries(productData).forEach(([key, value]) => {
+    if (Array.isArray(value)) {
+        formData.append(key, JSON.stringify(value));
+    } else if (value instanceof File) {
+        formData.append(key, value);
+    } else {
+        formData.append(key, String(value));
+    }
+    });
+
+    const response = await api.put<Product>(`/products/${id}`, formData, {
+    headers: {
+        'Content-Type': 'multipart/form-data',
+    },
+    });
     return response.data;
 };
 

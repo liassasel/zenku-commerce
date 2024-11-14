@@ -63,10 +63,16 @@ export default function ProductForm({ initialProduct, onSubmit }: ProductFormPro
 
     const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const productData = {
+        ...product,
+        price: parseFloat(String(product.price)) // Fuerza a q sea float
+    };
+
     if (initialProduct) {
         await onSubmit({ ...product, id: initialProduct.id });
     } else {
-        await onSubmit(product);
+        await onSubmit(productData);
     }
     };
 
