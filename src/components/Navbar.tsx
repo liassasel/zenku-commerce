@@ -3,11 +3,15 @@
 import Link from 'next/link'
 import { ShoppingCart, User, Moon, Sun, Globe } from 'lucide-react'
 import { useState } from 'react'
+import { usePathname } from 'next/navigation'
+import { useAuth } from '@/context/AuthContext'
 import { useApp } from '@/context/AppContext'
 
 export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const { theme, toggleTheme, lang, setLang, t } = useApp()
+    const pathname = usePathname()
+    const { user, userData, signOut } = useAuth()
 
     return (
     <nav className="bg-white dark:bg-[#1A1D23] border-b border-gray-200 dark:border-gray-800">
